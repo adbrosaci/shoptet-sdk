@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ruleset name="AdbrosSandbox">
+	<file>src</file>
+
+	<arg name="extensions" value="php,phpt"/>
+	<arg name="colors"/>
+	<arg value="nsp"/>
+	<arg name="cache"/>
+
+	<!-- Contributte Coding Standard -->
+	<rule ref="./vendor/contributte/qa/ruleset.xml"/>
+
+	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+		<properties>
+			<property name="rootNamespaces" type="array">
+				<element key="src" value="Adbros\Shoptet"/>
+			</property>
+			<property name="extensions" type="array" value="php,phpt"/>
+		</properties>
+	</rule>
+</ruleset>

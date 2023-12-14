@@ -1,0 +1,31 @@
+name: 'QA'
+
+on:
+  pull_request:
+  push:
+  schedule:
+    - cron: '0 8 * * 1' # At 08:00 on Monday
+
+env:
+  php-tools: 'composer:v2'
+
+jobs:
+  cs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+      - run: composer install --no-interaction --no-progress --prefer-dist
+      - run: composer cs
+
+  phpstan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+      - run: composer install --no-interaction --no-progress --prefer-dist
+      - run: composer phpstan
