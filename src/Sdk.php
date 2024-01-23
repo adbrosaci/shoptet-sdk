@@ -19,8 +19,8 @@ class Sdk
 	private Client $httpClient;
 
 	public function __construct(
-		string $apiBaseUri,
 		string $apiAccessToken,
+		string $apiBaseUri = 'https://api.myshoptet.com/api/',
 	)
 	{
 		$this->httpClient = new Client([
