@@ -14,14 +14,20 @@ class OAuth
 
 	private Client $httpClient;
 
+	private readonly string $oAuthAccessTokenUrl;
+
+	private readonly string $apiAccessTokenUrl;
+
 	public function __construct(
 		private readonly string $clientId,
 		private readonly string $clientSecret,
-		private readonly string $oAuthAccessTokenUrl,
-		private readonly string $apiAccessTokenUrl,
+		private readonly string $eshopUrl,
 	)
 	{
 		$this->httpClient = new Client();
+
+		$this->oAuthAccessTokenUrl = rtrim($this->eshopUrl, '/') . '/action/ApiOAuthServer/token';
+		$this->apiAccessTokenUrl = rtrim($this->eshopUrl, '/') . '/action/ApiOAuthServer/getAccessToken';
 	}
 
 	public function getOAuthAccessToken(string $code, string $redirectUri): OAuthAccessToken // @phpcs:ignore Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps
