@@ -3,12 +3,15 @@
 namespace Adbros\Shoptet;
 
 use Adbros\Shoptet\Entity\Customer;
+use Adbros\Shoptet\Entity\DiscountCoupon;
+use Adbros\Shoptet\Entity\DiscountCouponTemplate;
 use Adbros\Shoptet\Entity\PaginatedCustomers;
 use Adbros\Shoptet\Entity\PaginatedWebhooks;
 use Adbros\Shoptet\Entity\Webhooks;
 use Adbros\Shoptet\Enum\Event;
 use Adbros\Shoptet\Exception\ClientException;
 use Adbros\Shoptet\Exception\ServerException;
+use Adbros\Shoptet\Request\DiscountCouponRequest;
 use GuzzleHttp\Client;
 use Nette\Utils\Arrays;
 use Nette\Utils\Json;
@@ -99,6 +102,35 @@ class Sdk
 		$this->request('delete', sprintf('webhooks/%d', $id));
 	}
 
+	/**
+	 * @param array<DiscountCouponRequest> $discountCouponRequests
+	 * @return array<DiscountCoupon>
+	 */
+	public function createDiscountCoupons(array $discountCouponRequests): array
+	{
+		/** @var array<string, mixed> $response */
+		$response = $this->request('post', 'discount-coupons', [
+			'body' => json_encode([
+				'data' => [
+					'coupons' => Arrays::map($discountCouponRequests, fn (DiscountCouponRequest $d): array => $d->toArray()),
+				],
+			]),
+		]);
+
+		return Arrays::map($response['coupons'], fn (array $c): DiscountCoupon => DiscountCoupon::fromJson($c));
+	}
+
+	/**
+	 * @return array<DiscountCouponTemplate>
+	 */
+	public function getDiscountCouponTemplates(): array
+	{
+		/** @var array<string, mixed> $response */
+		$response = $this->request('get', 'discount-coupons/templates');
+
+		return Arrays::map($response['couponTemplates'], fn (array $t): DiscountCouponTemplate => DiscountCouponTemplate::fromJson($t));
+	}
+
 	public function generateSignatureKey(): string
 	{
 		/** @var array<string, mixed> $response */
@@ -120,6 +152,7 @@ class Sdk
 				? ClientException::class
 				: ServerException::class;
 			$json = Json::decode($e->getResponse()->getBody()->getContents(), Json::FORCE_ARRAY);
+			dump($json);
 
 			throw new $class('', $e->getCode(), $e, $json['errors'] ?? []);
 		}

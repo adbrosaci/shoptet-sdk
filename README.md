@@ -1,5 +1,11 @@
 # Shoptet SDK
-Simple Shoptet SDK.
+
+[![main workflow](https://github.com/adbrosaci/shoptet-sdk/actions/workflows/main.yml/badge.svg)](https://github.com/adbrosaci/shoptet-sdk/actions/workflows/main.yml)
+[![Licence](https://img.shields.io/packagist/l/adbros/shoptet-sdk.svg?style=flat-square)](https://packagist.org/packages/adbros/shoptet-sdk)
+[![Downloads this Month](https://img.shields.io/packagist/dm/adbros/shoptet-sdk.svg?style=flat-square)](https://packagist.org/packages/adbros/shoptet-sdk)
+[![Downloads total](https://img.shields.io/packagist/dt/adbros/shoptet-sdk.svg?style=flat-square)](https://packagist.org/packages/adbros/shoptet-sdk)
+[![Latest stable](https://img.shields.io/packagist/v/adbros/shoptet-sdk.svg?style=flat-square)](https://packagist.org/packages/adbros/shoptet-sdk)
+
 
 ## Installation
 ```shell
