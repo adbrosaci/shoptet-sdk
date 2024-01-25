@@ -59,7 +59,7 @@ class DiscountCouponRequest
 
 		return $array + match ($this->discountType) {
 			DiscountType::fixed => [
-				'amount' => number_format($this->amount, 2, '.', ''), // @phpstan-ignore parameter.type
+				'amount' => number_format($this->amount, 2, '.', ''), // @phpstan-ignore-line
 			],
 			DiscountType::percentual => [
 				'ratio' => number_format($this->ratio, 4, '.', ''), // @phpstan-ignore-line
