@@ -6,12 +6,14 @@ use Adbros\Shoptet\Entity\Customer;
 use Adbros\Shoptet\Entity\DiscountCoupon;
 use Adbros\Shoptet\Entity\DiscountCouponTemplate;
 use Adbros\Shoptet\Entity\PaginatedCustomers;
+use Adbros\Shoptet\Entity\PaginatedOrders;
 use Adbros\Shoptet\Entity\PaginatedWebhooks;
 use Adbros\Shoptet\Entity\Webhooks;
 use Adbros\Shoptet\Enum\Event;
 use Adbros\Shoptet\Exception\ClientException;
 use Adbros\Shoptet\Exception\ServerException;
 use Adbros\Shoptet\Request\DiscountCouponRequest;
+use DateTimeImmutable;
 use GuzzleHttp\Client;
 use Nette\Utils\Arrays;
 use Nette\Utils\Json;
@@ -131,6 +133,54 @@ class Sdk
 		return Arrays::map($response['couponTemplates'], fn (array $t): DiscountCouponTemplate => DiscountCouponTemplate::fromJson($t));
 	}
 
+	public function getOrders(
+		int $page = 1,
+		int $itemsPerPage = 20,
+		?int $statusId = null,
+		?string $shippingGuid = null,
+		?string $shippingCompanyCode = null,
+		?string $paymentMethodGuid = null,
+		?DateTimeImmutable $creationTimeFrom = null,
+		?DateTimeImmutable $creationTimeTo = null,
+		?string $codeFrom = null,
+		?string $codeTo = null,
+		?string $customerGuid = null,
+		?string $email = null,
+		?string $phone = null,
+		?string $productCode = null,
+		?DateTimeImmutable $changeTimeFrom = null,
+		?DateTimeImmutable $changeTimeTo = null,
+		?string $sourceId = null,
+	): PaginatedOrders
+	{
+		/** @var array<string, mixed> $response */
+		$response = $this->request('get', 'orders', [
+			'query' => [
+				'page' => $page,
+				'itemsPerPage' => $itemsPerPage,
+				'statusId' => $statusId !== null
+					? (string) $statusId
+					: null,
+				'shippingGuid' => $shippingGuid,
+				'shippingCompanyCode' => $shippingCompanyCode,
+				'paymentMethodGuid' => $paymentMethodGuid,
+				'creationTimeFrom' => $creationTimeFrom?->format('c'),
+				'creationTimeTo' => $creationTimeTo?->format('c'),
+				'codeFrom' => $codeFrom,
+				'codeTo' => $codeTo,
+				'customerGuid' => $customerGuid,
+				'email' => $email,
+				'phone' => $phone,
+				'productCode' => $productCode,
+				'changeTimeFrom' => $changeTimeFrom?->format('c'),
+				'changeTimeTo' => $changeTimeTo?->format('c'),
+				'sourceId' => $sourceId,
+			],
+		]);
+
+		return PaginatedOrders::fromJson($response);
+	}
+
 	public function generateSignatureKey(): string
 	{
 		/** @var array<string, mixed> $response */
@@ -152,7 +202,6 @@ class Sdk
 				? ClientException::class
 				: ServerException::class;
 			$json = Json::decode($e->getResponse()->getBody()->getContents(), Json::FORCE_ARRAY);
-			dump($json);
 
 			throw new $class('', $e->getCode(), $e, $json['errors'] ?? []);
 		}
