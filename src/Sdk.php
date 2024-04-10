@@ -13,6 +13,7 @@ use Adbros\Shoptet\Enum\Event;
 use Adbros\Shoptet\Exception\ClientException;
 use Adbros\Shoptet\Exception\ServerException;
 use Adbros\Shoptet\Request\DiscountCouponRequest;
+use Adbros\Shoptet\Request\DiscountCouponsSetRequest;
 use DateTimeImmutable;
 use GuzzleHttp\Client;
 use Nette\Utils\Arrays;
@@ -116,6 +117,21 @@ class Sdk
 				'data' => [
 					'coupons' => Arrays::map($discountCouponRequests, fn (DiscountCouponRequest $d): array => $d->toArray()),
 				],
+			]),
+		]);
+
+		return Arrays::map($response['coupons'], fn (array $c): DiscountCoupon => DiscountCoupon::fromJson($c));
+	}
+
+	/**
+	 * @return array<DiscountCoupon>
+	 */
+	public function createDiscountCouponsSet(DiscountCouponsSetRequest $discountCouponsSetRequest): array
+	{
+		/** @var array<string, mixed> $response */
+		$response = $this->request('post', 'discount-coupons/set', [
+			'body' => json_encode([
+				'data' => $discountCouponsSetRequest->toArray(),
 			]),
 		]);
 
