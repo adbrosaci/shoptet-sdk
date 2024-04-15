@@ -5,6 +5,7 @@ namespace Adbros\Shoptet;
 use Adbros\Shoptet\Entity\Customer;
 use Adbros\Shoptet\Entity\DiscountCoupon;
 use Adbros\Shoptet\Entity\DiscountCouponTemplate;
+use Adbros\Shoptet\Entity\Order;
 use Adbros\Shoptet\Entity\PaginatedCustomers;
 use Adbros\Shoptet\Entity\PaginatedOrders;
 use Adbros\Shoptet\Entity\PaginatedWebhooks;
@@ -147,6 +148,24 @@ class Sdk
 		$response = $this->request('get', 'discount-coupons/templates');
 
 		return Arrays::map($response['couponTemplates'], fn (array $t): DiscountCouponTemplate => DiscountCouponTemplate::fromJson($t));
+	}
+
+	/**
+	 * @param array<string> $include
+	 */
+	public function getOrder(
+		string $code,
+		array $include = [],
+	): Order
+	{
+		/** @var array<string, mixed> $response */
+		$response = $this->request('get', sprintf('orders/%s', $code), [
+			'query' => [
+				'include' => $include,
+			],
+		]);
+
+		return Order::fromJson($response['order']);
 	}
 
 	public function getOrders(
