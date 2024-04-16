@@ -8,7 +8,7 @@ class PaginatedOrders
 {
 
 	/**
-	 * @param array<Order> $orders
+	 * @param array<OrderLight> $orders
 	 */
 	public function __construct(
 		public readonly array $orders,
@@ -25,7 +25,7 @@ class PaginatedOrders
 		return new self(
 			orders: Arrays::map(
 				$json['orders'],
-				fn (array $json): Order => Order::fromJson($json),
+				fn (array $json): OrderLight => OrderLight::fromJson($json),
 			),
 			paginator: Paginator::fromJson($json['paginator']),
 		);

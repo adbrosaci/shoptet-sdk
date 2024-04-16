@@ -2,6 +2,7 @@
 
 namespace Adbros\Shoptet\Entity;
 
+use Adbros\Shoptet\Enum\VatMode;
 use DateTimeImmutable;
 
 class Order
@@ -10,22 +11,33 @@ class Order
 	public function __construct(
 		public readonly string $code,
 		public readonly ?string $guid,
+		public readonly ?string $externalCode,
 		public readonly DateTimeImmutable $creationTime,
 		public readonly ?DateTimeImmutable $changeTime,
-		public readonly ?string $fullName,
-		public readonly ?string $company,
 		public readonly ?string $email,
 		public readonly ?string $phone,
-		public readonly ?OrderStatus $status,
-		public readonly ?OrderSource $source,
-		public readonly ?OrderShipping $shipping,
-		public readonly ?OrderPaymentMethod $paymentMethod,
-		public readonly ?string $remark,
+		public readonly ?DateTimeImmutable $birthDate,
+		public readonly bool $vatPayer,
 		public readonly ?string $customerGuid,
-		public readonly OrderPrice $price,
-		public readonly ?bool $paid,
+		public readonly bool $addressesEqual,
 		public readonly ?bool $cashDeskOrder,
+		public readonly int $stockId,
+		public readonly ?bool $paid,
 		public readonly string $adminUrl,
+		public readonly ?string $onlinePaymentLink,
+		public readonly string $language,
+		public readonly ?string $referer,
+		public readonly ?OrderBillingMethod $billingMethod,
+		public readonly OrderBillingAddress $billingAddress,
+		public readonly OrderDeliveryAddress $deliveryAddress,
+		public readonly OrderStatus $status,
+		public readonly ?VatMode $vatMode,
+		public readonly OrderSource $source,
+		public readonly OrderPrice $price,
+		public readonly ?OrderPaymentMethod $paymentMethod,
+		public readonly OrderShipping $shipping,
+		public readonly ?string $clientIPAddress,
+		// @todo add missing properties
 	)
 	{
 	}
@@ -38,32 +50,43 @@ class Order
 		return new self(
 			code: $json['code'],
 			guid: $json['guid'],
+			externalCode: $json['externalCode'],
 			creationTime: new DateTimeImmutable($json['creationTime']),
 			changeTime: $json['changeTime'] !== null
 				? new DateTimeImmutable($json['changeTime'])
 				: null,
-			fullName: $json['fullName'],
-			company: $json['company'],
 			email: $json['email'],
 			phone: $json['phone'],
-			status: $json['status'] !== null
-				? OrderStatus::fromJson($json['status'])
+			birthDate: $json['birthDate'] !== null
+				? new DateTimeImmutable($json['birthDate'])
 				: null,
-			source: $json['source'] !== null
-				? OrderSource::fromJson($json['source'])
+			vatPayer: $json['vatPayer'],
+			customerGuid: $json['customerGuid'],
+			addressesEqual: $json['addressesEqual'],
+			cashDeskOrder: $json['cashDeskOrder'],
+			stockId: $json['stockId'],
+			paid: $json['paid'],
+			adminUrl: $json['adminUrl'],
+			onlinePaymentLink: $json['onlinePaymentLink'],
+			language: $json['language'],
+			referer: $json['referer'],
+			billingMethod: $json['billingMethod'] !== null
+				? OrderBillingMethod::fromJson($json['billingMethod'])
 				: null,
-			shipping: $json['shipping'] !== null
-				? OrderShipping::fromJson($json['shipping'])
+			billingAddress: OrderBillingAddress::fromJson($json['billingAddress']),
+			deliveryAddress: OrderDeliveryAddress::fromJson($json['deliveryAddress']),
+			status: OrderStatus::fromJson($json['status']),
+			vatMode: $json['vatMode'] !== null
+				? VatMode::from($json['vatMode'])
 				: null,
+			source: OrderSource::fromJson($json['source']),
+			price: OrderPrice::fromJson($json['price']),
 			paymentMethod: $json['paymentMethod'] !== null
 				? OrderPaymentMethod::fromJson($json['paymentMethod'])
 				: null,
-			remark: $json['remark'],
-			customerGuid: $json['customerGuid'],
-			price: OrderPrice::fromJson($json['price']),
-			paid: $json['paid'],
-			cashDeskOrder: $json['cashDeskOrder'],
-			adminUrl: $json['adminUrl'],
+			shipping: OrderShipping::fromJson($json['shipping']),
+			clientIPAddress: $json['clientIPAddress'],
+			// @todo add missing properties
 		);
 	}
 
