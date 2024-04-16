@@ -29,7 +29,7 @@ class Order
 		public readonly ?string $referer,
 		public readonly ?OrderBillingMethod $billingMethod,
 		public readonly OrderBillingAddress $billingAddress,
-		public readonly OrderDeliveryAddress $deliveryAddress,
+		public readonly ?OrderDeliveryAddress $deliveryAddress,
 		public readonly OrderStatus $status,
 		public readonly ?VatMode $vatMode,
 		public readonly OrderSource $source,
@@ -74,7 +74,9 @@ class Order
 				? OrderBillingMethod::fromJson($json['billingMethod'])
 				: null,
 			billingAddress: OrderBillingAddress::fromJson($json['billingAddress']),
-			deliveryAddress: OrderDeliveryAddress::fromJson($json['deliveryAddress']),
+			deliveryAddress: $json['deliveryAddress'] !== null
+				? OrderDeliveryAddress::fromJson($json['deliveryAddress'])
+				: null,
 			status: OrderStatus::fromJson($json['status']),
 			vatMode: $json['vatMode'] !== null
 				? VatMode::from($json['vatMode'])
