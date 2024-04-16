@@ -7,7 +7,7 @@ class OrderBillingMethod
 
 	public function __construct(
 		public readonly string $name,
-		public readonly string $id,
+		public readonly int $id,
 	)
 	{
 	}
