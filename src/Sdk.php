@@ -5,6 +5,7 @@ namespace Adbros\Shoptet;
 use Adbros\Shoptet\Entity\Customer;
 use Adbros\Shoptet\Entity\DiscountCoupon;
 use Adbros\Shoptet\Entity\DiscountCouponTemplate;
+use Adbros\Shoptet\Entity\EshopInfo;
 use Adbros\Shoptet\Entity\Order;
 use Adbros\Shoptet\Entity\PaginatedCustomers;
 use Adbros\Shoptet\Entity\PaginatedOrders;
@@ -214,6 +215,56 @@ class Sdk
 		]);
 
 		return PaginatedOrders::fromJson($response);
+	}
+
+	public function getEshopInfo(
+		bool $orderAdditionalFields = false,
+		bool $orderStatuses = false,
+		bool $paymentMethods = false,
+		bool $shippingMethods = false,
+		bool $imageCuts = false,
+		bool $countries = false,
+		bool $cashDesk = false,
+	): EshopInfo
+	{
+		$include = [];
+
+		if ($orderAdditionalFields) {
+			$include[] = 'orderAdditionalFields';
+		}
+
+		if ($orderStatuses) {
+			$include[] = 'orderStatuses';
+		}
+
+		if ($paymentMethods) {
+			$include[] = 'paymentMethods';
+		}
+
+		if ($shippingMethods) {
+			$include[] = 'shippingMethods';
+		}
+
+		if ($imageCuts) {
+			$include[] = 'imageCuts';
+		}
+
+		if ($countries) {
+			$include[] = 'countries';
+		}
+
+		if ($cashDesk) {
+			$include[] = 'cashDesk';
+		}
+
+		/** @var array<string, mixed> $response */
+		$response = $this->request('get', 'eshop', [
+			'query' => $include !== [] ? [
+				'include' => implode(',', $include),
+			] : [],
+		]);
+
+		return EshopInfo::fromJson($response);
 	}
 
 	public function generateSignatureKey(): string
