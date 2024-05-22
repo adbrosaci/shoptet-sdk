@@ -3,6 +3,8 @@
 namespace Adbros\Shoptet;
 
 use Adbros\Shoptet\Entity\ApiAccessToken;
+use Adbros\Shoptet\Entity\BasicEshop;
+use Adbros\Shoptet\Entity\BasicOAuthAccessToken;
 use Adbros\Shoptet\Entity\OAuthAccessToken;
 use Adbros\Shoptet\Exception\ClientException;
 use Adbros\Shoptet\Exception\ServerException;
@@ -57,6 +59,50 @@ class OAuth
 		]);
 
 		return ApiAccessToken::fromJson($response);
+	}
+
+	public function getBasicOAuthAccessToken(string $code, string $redirectUri, ?string $baseOAuthUrl = null): BasicOAuthAccessToken // @phpcs:ignore Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps
+	{
+		if ($baseOAuthUrl === null) {
+			$baseOAuthUrl = rtrim($this->eshopUrl, '/') . '/action/OAuthServer/';
+		}
+
+		$oAuthUrl = $baseOAuthUrl . 'token';
+
+		/** @var array<string, mixed> $response */
+		$response = $this->request('POST', $oAuthUrl, [
+			'json' => [
+				'client_id' => $this->clientId,
+				'client_secret' => $this->clientSecret,
+				'code' => $code,
+				'grant_type' => 'authorization_code',
+				'redirect_uri' => $redirectUri,
+				'scope' => 'basic_eshop',
+			],
+		]);
+
+		return BasicOAuthAccessToken::fromJson($response);
+	}
+
+	public function getBasicEshop(string $basicOAuthAccessToken, ?string $baseOAuthUrl = null): BasicEshop
+	{
+		if ($baseOAuthUrl === null) {
+			$baseOAuthUrl = rtrim($this->eshopUrl, '/') . '/action/OAuthServer/';
+		}
+
+		$oAuthUrl = $baseOAuthUrl . 'resource';
+
+		/** @var array<string, mixed> $response */
+		$response = $this->request('POST', $oAuthUrl, [
+			'headers' => [
+				'Authorization' => sprintf('Bearer %s', $basicOAuthAccessToken),
+			],
+			'query' => [
+				'method' => 'getBasicEshop',
+			],
+		]);
+
+		return BasicEshop::fromJson($response['data']);
 	}
 
 	/**
