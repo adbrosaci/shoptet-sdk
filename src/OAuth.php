@@ -61,13 +61,25 @@ class OAuth
 		return ApiAccessToken::fromJson($response);
 	}
 
-	public function getBasicOAuthAccessToken(string $code, string $redirectUri, ?string $baseOAuthUrl = null): BasicOAuthAccessToken // @phpcs:ignore Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps
+	public function getBasicLoginUrl(string $redirectUri, ?string $baseOAuthUrl = null, ?string $state = null): string
 	{
-		if ($baseOAuthUrl === null) {
-			$baseOAuthUrl = rtrim($this->eshopUrl, '/') . '/action/OAuthServer/';
+		$params = [
+			'client_id' => $this->clientId,
+			'scope' => 'basic_eshop',
+			'response_type' => 'code',
+			'redirect_uri' => $redirectUri,
+		];
+
+		if ($state !== null) {
+			$params['state'] = $state;
 		}
 
-		$oAuthUrl = $baseOAuthUrl . 'token';
+		return $this->getBasicOAuthUrl($baseOAuthUrl) . 'authorize?' . http_build_query($params);
+	}
+
+	public function getBasicOAuthAccessToken(string $code, string $redirectUri, ?string $baseOAuthUrl = null): BasicOAuthAccessToken // @phpcs:ignore Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps
+	{
+		$oAuthUrl = $this->getBasicOAuthUrl($baseOAuthUrl) . 'token';
 
 		/** @var array<string, mixed> $response */
 		$response = $this->request('POST', $oAuthUrl, [
@@ -86,11 +98,7 @@ class OAuth
 
 	public function getBasicEshop(string $basicOAuthAccessToken, ?string $baseOAuthUrl = null): BasicEshop
 	{
-		if ($baseOAuthUrl === null) {
-			$baseOAuthUrl = rtrim($this->eshopUrl, '/') . '/action/OAuthServer/';
-		}
-
-		$oAuthUrl = $baseOAuthUrl . 'resource';
+		$oAuthUrl = $this->getBasicOAuthUrl($baseOAuthUrl) . 'resource';
 
 		/** @var array<string, mixed> $response */
 		$response = $this->request('POST', $oAuthUrl, [
@@ -103,6 +111,15 @@ class OAuth
 		]);
 
 		return BasicEshop::fromJson($response['data']);
+	}
+
+	private function getBasicOAuthUrl(?string $baseOAuthUrl): string // @phpcs:ignore Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps
+	{
+		if ($baseOAuthUrl === null) {
+			$baseOAuthUrl = rtrim($this->eshopUrl, '/') . '/action/OAuthServer/';
+		}
+
+		return $baseOAuthUrl;
 	}
 
 	/**
