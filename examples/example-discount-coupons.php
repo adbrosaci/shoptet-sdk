@@ -18,7 +18,7 @@ if ($templates !== []) {
 			discountType: DiscountType::fixed,
 			template: $templates[0]->guid,
 			amount: 100,
-			currency: Currency::czk,
+			currency: Currency::CZK,
 		),
 	]);
 
