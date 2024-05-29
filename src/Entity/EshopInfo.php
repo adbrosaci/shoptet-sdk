@@ -10,6 +10,7 @@ class EshopInfo
 	 * @param array<EshopInfoUrl> $urls
 	 */
 	public function __construct(
+		public readonly EshopInfoContactInformation $contactInformation,
 		public readonly array $currencies,
 		public readonly array $urls,
 	)
@@ -22,6 +23,7 @@ class EshopInfo
 	public static function fromJson(array $json): self
 	{
 		return new self(
+			contactInformation: EshopInfoContactInformation::fromJson($json['contactInformation']),
 			currencies: array_map(fn (array $item): EshopInfoCurrency => EshopInfoCurrency::fromJson($item), $json['currencies']),
 			urls: array_map(fn (array $item): EshopInfoUrl => EshopInfoUrl::fromJson($item), $json['urls']),
 		);
