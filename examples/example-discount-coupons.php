@@ -15,7 +15,7 @@ if ($templates !== []) {
 	$coupons = $sdk->createDiscountCoupons([
 		new DiscountCouponRequest(
 			code: Random::generate(),
-			discountType: DiscountType::fixed,
+			discountType: DiscountType::Fixed,
 			template: $templates[0]->guid,
 			amount: 100,
 			currency: Currency::CZK,

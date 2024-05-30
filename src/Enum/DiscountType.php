@@ -5,7 +5,7 @@ namespace Adbros\Shoptet\Enum;
 enum DiscountType: string
 {
 
-	case percentual = 'percentual';
-	case fixed = 'fixed';
+	case Percentual = 'percentual';
+	case Fixed = 'fixed';
 
 }

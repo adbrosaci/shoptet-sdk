@@ -19,14 +19,14 @@ class DiscountCouponsSetRequest
 		public readonly ?float $ratio = null,
 		public readonly ?float $minPrice = null,
 		public readonly ?Currency $currency = null,
-		public readonly ShippingPrice $shippingPrice = ShippingPrice::cart,
+		public readonly ShippingPrice $shippingPrice = ShippingPrice::Cart,
 		public readonly ?DateTimeImmutable $validFrom = null,
 		public readonly ?DateTimeImmutable $validTo = null,
 		public readonly bool $reusable = false,
 		public readonly ?string $remark = null,
 	)
 	{
-		if ($discountType === DiscountType::percentual) {
+		if ($discountType === DiscountType::Percentual) {
 			if ($ratio === null) {
 				throw new InvalidArgumentException('Ratio must be set for percentual discount type.');
 			}
@@ -58,10 +58,10 @@ class DiscountCouponsSetRequest
 		];
 
 		return $array + match ($this->discountType) {
-			DiscountType::fixed => [
+			DiscountType::Fixed => [
 				'amount' => number_format($this->amount, 2, '.', ''), // @phpstan-ignore-line
 			],
-			DiscountType::percentual => [
+			DiscountType::Percentual => [
 				'ratio' => number_format($this->ratio, 4, '.', ''), // @phpstan-ignore-line
 			],
 		};
