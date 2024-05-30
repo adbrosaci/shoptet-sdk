@@ -86,7 +86,7 @@ $sdk->createDiscountCoupons(
 	discountCouponRequests: [
 		new Adbros\Shoptet\Request\DiscountCouponRequest(
 			code: 'some-secret-code',
-			discountType: Adbros\Shoptet\Enum\DiscountType::percentual,
+			discountType: Adbros\Shoptet\Enum\DiscountType::Percentual,
 			template: '568bf66b-f574-48d6-b608-e3096cfd6361',
 			ratio: 15,
 		),
