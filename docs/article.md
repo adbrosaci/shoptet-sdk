@@ -2,11 +2,21 @@
 
 ![Ilustrační obrázek](assets/article.png)
 
-U nás v Adbrosu máme obrovské zkušenosti s vývojem věrnostního programu na míru. Vzhledem k tomu, že nás oslovil klient s tím, že bych chtěl naše zkušenosti využít ve svém e-shopu postaveném na platformě [Shoptet](https://www.shoptet.cz/) rozhodli jsme se vyvynout univerzální [doplňek](https://doplnky.shoptet.cz/) pro tuto platformu.
+U nás v Adbrosu máme obrovské zkušenosti s vývojem věrnostního programu na míru. Vzhledem k tomu, že nás oslovil klient s tím, že by chtěl naše zkušenosti využít ve svém e-shopu postaveném na platformě [Shoptet](https://www.shoptet.cz/) rozhodli jsme se vyvynout univerzální [doplňek](https://doplnky.shoptet.cz/) pro tuto platformu.
 
 K vývoji doplňku je potřeba využít Shoptet API. Jeho [dokumentace](https://shoptet.docs.apiary.io) je na dobré úrovni, bohužel ale neexistuje žádná knihovna pro práci s tímto API pro jazyk PHP, který na backendu našich aplikací primárně používáme. 
 
 Protože je pro nás důležité mít náš kód striktně typovaný, rozhodli jsme se napsat knihovnu vlastní. Jmenuje se [adbros/shoptet-sdk](https://packagist.org/packages/adbros/shoptet-sdk) a je dostupná jako open source pod licencí MIT.
+
+Nyní si ukážeme, jak knihovnu použít.
+
+## Instalace
+
+Knihovna vyžaduje PHP 8.1 a vyšší. Instalaci provedeme standardně přes Composer.
+
+```shell
+composer require adbros/shoptet-sdk
+```
 
 ## Získání API tokenu při instalaci doplňku
 
@@ -46,26 +56,41 @@ $page = 1;
 
 do {
 	$customers = $sdk->getCustomers(
-        page: $page,
-    );
+		page: $page,
+	);
 	
 	foreach ($customers->customers as $customer) {
 		$customerDetail = $sdk->getCustomer(
-            guid: $customer->guid,
-        );
+			guid: $customer->guid,
+		);
 	}
 } while ($page++ < $customers->paginator->pageCount);
 ```
 
-Nebo si zaregistrovat webhooky.
+Zaregistrovat si nějaké webhooky.
 
 ```php
 $sdk->createWebhook(
-    event: [
-        Adbros\Shoptet\Enum\Event::OrderCreate,
-        Adbros\Shoptet\Enum\Event::CustomerCreate,
-    ],
-    url: 'https://example.com/webhook',
+	event: [
+		Adbros\Shoptet\Enum\Event::OrderCreate,
+		Adbros\Shoptet\Enum\Event::CustomerCreate,
+	],
+	url: 'https://example.com/webhook',
+);
+```
+
+Nebo vytvořit slevové kupóny.
+
+```php
+$sdk->createDiscountCoupons(
+	discountCouponRequests: [
+		new Adbros\Shoptet\Request\DiscountCouponRequest(
+			code: 'some-secret-code',
+			discountType: Adbros\Shoptet\Enum\DiscountType::percentual,
+			template: '568bf66b-f574-48d6-b608-e3096cfd6361',
+			ratio: 15,
+		),
+	],
 );
 ```
 
