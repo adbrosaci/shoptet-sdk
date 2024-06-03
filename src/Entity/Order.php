@@ -4,10 +4,14 @@ namespace Adbros\Shoptet\Entity;
 
 use Adbros\Shoptet\Enum\VatMode;
 use DateTimeImmutable;
+use Nette\Utils\Arrays;
 
 class Order
 {
 
+	/**
+	 * @param array<OrderItem> $items
+	 */
 	public function __construct(
 		public readonly string $code,
 		public readonly ?string $guid,
@@ -38,6 +42,7 @@ class Order
 		public readonly OrderShipping $shipping,
 		public readonly ?string $clientIPAddress,
 		// @todo add missing properties
+		public readonly array $items,
 	)
 	{
 	}
@@ -89,6 +94,10 @@ class Order
 			shipping: OrderShipping::fromJson($json['shipping']),
 			clientIPAddress: $json['clientIPAddress'],
 			// @todo add missing properties
+			items: Arrays::map(
+				$json['items'],
+				fn (array $item): OrderItem => OrderItem::fromJson($item),
+			),
 		);
 	}
 
