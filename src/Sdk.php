@@ -7,6 +7,7 @@ use Adbros\Shoptet\Entity\DiscountCoupon;
 use Adbros\Shoptet\Entity\DiscountCouponTemplate;
 use Adbros\Shoptet\Entity\EshopInfo;
 use Adbros\Shoptet\Entity\Order;
+use Adbros\Shoptet\Entity\OrderStatuses;
 use Adbros\Shoptet\Entity\PaginatedCustomers;
 use Adbros\Shoptet\Entity\PaginatedOrders;
 use Adbros\Shoptet\Entity\PaginatedWebhooks;
@@ -215,6 +216,14 @@ class Sdk
 		]);
 
 		return PaginatedOrders::fromJson($response);
+	}
+
+	public function getOrderStatuses(): OrderStatuses
+	{
+		/** @var array<string, mixed> $response */
+		$response = $this->request('get', 'orders/statuses');
+
+		return OrderStatuses::fromJson($response);
 	}
 
 	public function getEshopInfo(

@@ -16,7 +16,7 @@ class OrderLight
 		public readonly ?string $company,
 		public readonly ?string $email,
 		public readonly ?string $phone,
-		public readonly ?OrderStatus $status,
+		public readonly ?OrderStatusLight $status,
 		public readonly ?OrderSource $source,
 		public readonly ?OrderShipping $shipping,
 		public readonly ?OrderPaymentMethod $paymentMethod,
@@ -47,7 +47,7 @@ class OrderLight
 			email: $json['email'],
 			phone: $json['phone'],
 			status: $json['status'] !== null
-				? OrderStatus::fromJson($json['status'])
+				? OrderStatusLight::fromJson($json['status'])
 				: null,
 			source: $json['source'] !== null
 				? OrderSource::fromJson($json['source'])

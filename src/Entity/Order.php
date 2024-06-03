@@ -34,7 +34,7 @@ class Order
 		public readonly ?OrderBillingMethod $billingMethod,
 		public readonly OrderBillingAddress $billingAddress,
 		public readonly ?OrderDeliveryAddress $deliveryAddress,
-		public readonly OrderStatus $status,
+		public readonly OrderStatusLight $status,
 		public readonly ?VatMode $vatMode,
 		public readonly OrderSource $source,
 		public readonly OrderPrice $price,
@@ -82,7 +82,7 @@ class Order
 			deliveryAddress: $json['deliveryAddress'] !== null
 				? OrderDeliveryAddress::fromJson($json['deliveryAddress'])
 				: null,
-			status: OrderStatus::fromJson($json['status']),
+			status: OrderStatusLight::fromJson($json['status']),
 			vatMode: $json['vatMode'] !== null
 				? VatMode::from($json['vatMode'])
 				: null,
