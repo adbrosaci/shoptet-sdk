@@ -6,7 +6,7 @@ class EshopInfoBankAccount
 {
 
 	public function __construct(
-		public readonly string $accountNumber,
+		public readonly ?string $accountNumber,
 		public readonly ?string $iban,
 		public readonly ?string $bic,
 	)
