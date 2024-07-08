@@ -17,7 +17,7 @@ class DiscountCoupon
 		public readonly ?float $amount,
 		public readonly ?float $ratio,
 		public readonly ?float $minPrice,
-		public readonly Currency $currency,
+		public readonly ?Currency $currency,
 		public readonly ShippingPrice $shippingPrice,
 		public readonly ?DateTimeImmutable $validFrom,
 		public readonly ?DateTimeImmutable $validTo,
@@ -47,7 +47,9 @@ class DiscountCoupon
 			minPrice: $json['minPrice'] !== null
 				? floatval($json['minPrice'])
 				: null,
-			currency: Currency::from($json['currency']),
+			currency: $json['currency'] !== null
+				? Currency::from($json['currency'])
+				: null,
 			shippingPrice: ShippingPrice::from($json['shippingPrice']),
 			validFrom: $json['validFrom'] !== null
 				? new DateTimeImmutable($json['validFrom'])
