@@ -11,12 +11,15 @@ use Adbros\Shoptet\Entity\OrderStatuses;
 use Adbros\Shoptet\Entity\PaginatedCustomers;
 use Adbros\Shoptet\Entity\PaginatedOrders;
 use Adbros\Shoptet\Entity\PaginatedWebhooks;
+use Adbros\Shoptet\Entity\TemplateSnippet;
 use Adbros\Shoptet\Entity\Webhooks;
 use Adbros\Shoptet\Enum\Event;
+use Adbros\Shoptet\Enum\SnippetLocation;
 use Adbros\Shoptet\Exception\ClientException;
 use Adbros\Shoptet\Exception\ServerException;
 use Adbros\Shoptet\Request\DiscountCouponRequest;
 use Adbros\Shoptet\Request\DiscountCouponsSetRequest;
+use Adbros\Shoptet\Request\TemplateSnippetRequest;
 use DateTimeImmutable;
 use GuzzleHttp\Client;
 use Nette\Utils\Arrays;
@@ -274,6 +277,29 @@ class Sdk
 		]);
 
 		return EshopInfo::fromJson($response);
+	}
+
+	/**
+	 * @param array<TemplateSnippetRequest> $snippets
+	 * @return array<TemplateSnippet>
+	 */
+	public function setTemplateInclude(array $snippets): array
+	{
+		/** @var array<string, mixed> $response */
+		$response = $this->request('post', 'template-include', [
+			'body' => json_encode([
+				'data' => [
+					'snippets' => Arrays::map($snippets, fn (TemplateSnippetRequest $s): array => $s->toArray()),
+				],
+			]),
+		]);
+
+		return Arrays::map($response['snippets'], fn (array $t): TemplateSnippet => TemplateSnippet::fromJson($t));
+	}
+
+	public function deleteTemplateInclude(SnippetLocation $location): void
+	{
+		$this->request('delete', 'template-include/' . $location->value);
 	}
 
 	public function generateSignatureKey(): string
