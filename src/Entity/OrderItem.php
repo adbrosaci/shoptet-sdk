@@ -13,7 +13,7 @@ class OrderItem
 		public readonly OrderItemType $itemType,
 		public readonly string $name,
 		public readonly ?string $variantName,
-		public readonly ?int $ean,
+		public readonly ?string $ean,
 		public readonly ?string $brand,
 		public readonly ?string $supplierName,
 		public readonly ?string $remark,
