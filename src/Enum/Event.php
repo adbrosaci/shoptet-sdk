@@ -22,4 +22,6 @@ enum Event: string
 	case OrderDelete = 'order:delete';
 	case OrderUpdate = 'order:update';
 
+	case OrderStatusesListChange = 'orderStatusesList:change';
+
 }
