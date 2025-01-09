@@ -39,7 +39,7 @@ class Order
 		public readonly OrderSource $source,
 		public readonly OrderPrice $price,
 		public readonly ?OrderPaymentMethod $paymentMethod,
-		public readonly OrderShipping $shipping,
+		public readonly ?OrderShipping $shipping,
 		public readonly ?string $clientIPAddress,
 		// @todo add missing properties
 		public readonly array $items,
@@ -91,7 +91,9 @@ class Order
 			paymentMethod: $json['paymentMethod'] !== null
 				? OrderPaymentMethod::fromJson($json['paymentMethod'])
 				: null,
-			shipping: OrderShipping::fromJson($json['shipping']),
+			shipping: $json['shipping'] !== null
+				? OrderShipping::fromJson($json['shipping'])
+				: null,
 			clientIPAddress: $json['clientIPAddress'],
 			// @todo add missing properties
 			items: Arrays::map(
