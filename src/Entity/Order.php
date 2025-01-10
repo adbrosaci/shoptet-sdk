@@ -36,7 +36,7 @@ class Order
 		public readonly ?OrderDeliveryAddress $deliveryAddress,
 		public readonly OrderStatusLight $status,
 		public readonly ?VatMode $vatMode,
-		public readonly OrderSource $source,
+		public readonly ?OrderSource $source,
 		public readonly OrderPrice $price,
 		public readonly ?OrderPaymentMethod $paymentMethod,
 		public readonly ?OrderShipping $shipping,
@@ -86,7 +86,9 @@ class Order
 			vatMode: $json['vatMode'] !== null
 				? VatMode::from($json['vatMode'])
 				: null,
-			source: OrderSource::fromJson($json['source']),
+			source: $json['source'] !== null
+				? OrderSource::fromJson($json['source'])
+				: null,
 			price: OrderPrice::fromJson($json['price']),
 			paymentMethod: $json['paymentMethod'] !== null
 				? OrderPaymentMethod::fromJson($json['paymentMethod'])
