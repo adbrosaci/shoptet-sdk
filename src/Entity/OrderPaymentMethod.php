@@ -7,7 +7,7 @@ class OrderPaymentMethod
 
 	public function __construct(
 		public readonly string $name,
-		public readonly string $guid,
+		public readonly ?string $guid,
 	)
 	{
 	}
